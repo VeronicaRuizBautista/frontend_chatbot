@@ -1,58 +1,46 @@
-import React, { useState, useEffect } from "react";
-import { io } from "socket.io-client";
+import React, { useState } from 'react';
 
 const ChatBot = () => {
-    const [messages, setMessages] = useState([]);
-    const [input, setInput] = useState("");
-    const [socket, setSocket] = useState(null);
+  const [userMessage, setUserMessage] = useState('');
+  const [botResponse, setBotResponse] = useState('');
 
-        useEffect(() => {
-        // Conectar al servidor WebSocket
-        const socketConnection = io("ws://localhost:5005");
-        console.log("hii")
-        socketConnection.on("connect", () => {
-            console.log("Conectado al WebSocket");
-    });
+  const sendMessage = async () => {
+    try {
+      const response = await fetch('http://localhost:5005/webhooks/rest/webhook', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sender: 'user',       // ID del usuario
+          message: userMessage,
+        }),
+      });
 
-    socketConnection.on("message", (data) => {
-        console.log("Respuesta de Rasa:", data)
-        setMessages((prevMessages) => [...prevMessages, data]);
-    });
+      // Procesar la respuesta del bot
+      const data = await response.json();
+      const botMessage = data[0]?.text;
+      setBotResponse(botMessage);
+    } catch (error) {
+      console.error('Error al enviar el mensaje:', error);
+    }
+  };
 
-    setSocket(socketConnection);
-
-    return () => {
-      socketConnection.disconnect(); // Desconectar cuando el componente se desmonte
-    };
-    }, []);
-
-    const handleSendMessage = () => {
-        if (input) {
-            socket.emit("message", { message: input });
-            setMessages((prevMessages) => [...prevMessages, { text: input, sender: "user" }]);
-            setInput("");
-        }
-    };
-
-    return (
+  return (
     <div>
-        <h2>Chatbot</h2>
-        <div className="chat-box">
-            {messages.map((msg, index) => (
-                <div key={index} className="message">
-                {msg.text || msg}
-                </div>
-            ))}
-        </div>
+      <h1>ChatBot</h1>
+      <div>
         <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Escribe tu mensaje..."
+          type="text"
+          value={userMessage}
+          onChange={(e) => setUserMessage(e.target.value)}
+          placeholder="Escribe un mensaje"
         />
-        <button onClick={handleSendMessage}>Enviar</button>
+        <button onClick={sendMessage}>Enviar</button>
+      </div>
+      {botResponse && <div><strong>Bot:</strong> {botResponse}</div>}
     </div>
-    );
+  );
 };
 
 export default ChatBot;
