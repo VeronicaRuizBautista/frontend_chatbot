@@ -18,9 +18,17 @@ const ChatBot = () => {
       });
 
       // Procesar la respuesta del bot
-      const data = await response.json();
-      const botMessage = data[0]?.text;
-      setBotResponse(botMessage);
+    const data = await response.json();
+
+    // Verificar si hay múltiples respuestas
+    let botMessage = '';
+    data.forEach(item => {
+      if (item.text) {
+        botMessage += item.text + ' ';
+      }
+    });
+
+    setBotResponse(botMessage.trim());
     } catch (error) {
       console.error('Error al enviar el mensaje:', error);
     }
