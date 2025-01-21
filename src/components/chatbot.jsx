@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {MessageBox} from './messageBox.jsx';
 
 const ChatBot = () => {
   const [userMessage, setUserMessage] = useState('');
-  const [botResponse, setBotResponse] = useState('');
   const [allMessages, setAllMessages] = useState({})
 
   const sendMessage = async () => {
     try {
       setAllMessages((prevMessages) => ({
         ...prevMessages,
-        [`user-${Date.now()}`]: userMessage
+        [`user-${Date.now()}-${Math.random()}`]: userMessage
       }))
       setUserMessage('')
       const response = await fetch('http://localhost:5005/webhooks/rest/webhook', {
@@ -26,24 +25,21 @@ const ChatBot = () => {
       console.log(userMessage)
       const data = await response.json();
 
-      let botMessage = '';
       data.forEach(item => {
-        if (item.text) {
-          botMessage += item.text + ' ';
-          setAllMessages((prevMessages) => ({
-            ...prevMessages,
-            [`bot-${Date.now()}`]: item.text
-          }))
-        }
+        setAllMessages((prevMessages) => ({
+          ...prevMessages,
+          [`bot-${Date.now()}-${Math.random()}`]: item.text
+        }))
       });
-      console.log(botMessage)
-      setBotResponse(botMessage.trim());
     } catch (error) {
       console.error('Error al enviar el mensaje:', error);
     }
   };
 
-
+  useEffect(() => {
+    console.log("Mensajes actualizados:", allMessages);
+  }, [allMessages]);
+  
   return (
     <div className='bg-gray-100 w-[500px] h-[500px] border flex flex-col'>
       <div className='h-[20%] w-[100%] bg-white flex items-center px-10'>
