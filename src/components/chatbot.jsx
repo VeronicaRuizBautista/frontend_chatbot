@@ -4,33 +4,39 @@ import {MessageBox} from './messageBox.jsx';
 const ChatBot = () => {
   const [userMessage, setUserMessage] = useState('');
   const [botResponse, setBotResponse] = useState('');
+  const [allMessages, setAllMessages] = useState({})
 
   const sendMessage = async () => {
     try {
+      setAllMessages((prevMessages) => ({
+        ...prevMessages,
+        [`user-${Date.now()}`]: userMessage
+      }))
+      setUserMessage('')
       const response = await fetch('http://localhost:5005/webhooks/rest/webhook', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          sender: 'user',       // ID del usuario
+          sender: 'user',
           message: userMessage,
         }),
       });
       console.log(userMessage)
-      setUserMessage('')
-      console.log(userMessage)
-      // Procesar la respuesta del bot
       const data = await response.json();
 
-      // Verificar si hay múltiples respuestas
       let botMessage = '';
       data.forEach(item => {
         if (item.text) {
           botMessage += item.text + ' ';
+          setAllMessages((prevMessages) => ({
+            ...prevMessages,
+            [`bot-${Date.now()}`]: item.text
+          }))
         }
       });
-
+      console.log(botMessage)
       setBotResponse(botMessage.trim());
     } catch (error) {
       console.error('Error al enviar el mensaje:', error);
@@ -48,16 +54,9 @@ const ChatBot = () => {
         </div>
       </div>
       <div className='h-[68%] overflow-hidden overflow-y-scroll py-7 px-5 flex flex-col gap-5'>
-        <MessageBox sender={"user"} message={"Hola"} />
-        <MessageBox sender={"bot"} message={"Hola"} />
-        <MessageBox sender={"user"} message={"Hola"} />
-        <MessageBox sender={"user"} message={"Hola"} />
-        <MessageBox sender={"user"} message={"Hola"} />
-        <MessageBox sender={"user"} message={"Hola"} />
-        <MessageBox sender={"user"} message={"Hola"} />
-        <MessageBox sender={"user"} message={"Hola"} />
-        <MessageBox sender={"user"} message={"Hola"} />
-        <MessageBox sender={"user"} message={"Hola"} />
+        {Object.entries(allMessages).map(([key, value]) => {
+          return (<MessageBox sender={key.includes("user") ? "user" : "bot"} message={value} />)
+        })}
       </div>
       <div className='h-[12%] w-[100%] bg-white flex justify-between items-center px-5'>
         <input
