@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {MessageBox} from './messageBox.jsx';
 
-const ChatBot = () => {
+const ChatBot = ({ onClose }) => {
   const [userMessage, setUserMessage] = useState('');
   const [allMessages, setAllMessages] = useState({})
 
@@ -41,14 +41,14 @@ const ChatBot = () => {
   }, [allMessages]);
   
   return (
-    <div className='bg-gray-100 w-[500px] h-[600px] border flex flex-col'>
-      <div className='h-[20%] w-[100%] bg-white flex items-center px-10'>
-        <img src="" alt="" className='h-[50px] w-[50px] bg-black rounded-full'/>
+    <div className='bg-gray-100 max-w-[100%] h-[500px] flex flex-col'>
+      <div className='h-[20%] w-[100%] bg-white flex items-center px-5'>
+        <img src="../../public/img/robot.jpg" alt="" className='h-[50px] w-[50px] bg-black rounded-full'/>
         <div>
           <h3 className='text-left text-xl font-medium ml-6'>Solvo Ai Chat</h3>
           <h4 className='text-left ml-6'>Support Agent</h4>
         </div>
-        <i className='bx bx-x ml-auto bx-lg text-medium-orange cursor-pointer hover:text-dark-orange'></i>
+        <i onClick={onClose} className='bx bx-x ml-auto bx-lg text-medium-orange cursor-pointer hover:text-dark-orange'></i>
       </div>
       <div className='h-[68%] overflow-hidden overflow-y-scroll py-7 px-5 flex flex-col gap-5'>
         {Object.entries(allMessages).map(([key, value]) => {
@@ -60,6 +60,11 @@ const ChatBot = () => {
           type="text"
           value={userMessage}
           onChange={(e) => setUserMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              sendMessage();
+            }
+          }}
           placeholder="Escribe un mensaje"
           className='text-lg outline-none w-[90%]'
         />
