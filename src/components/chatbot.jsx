@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 import {MessageBox} from './messageBox.jsx';
 
 const ChatBot = ({ onClose }) => {
   const [userMessage, setUserMessage] = useState('');
   const [allMessages, setAllMessages] = useState({})
+  const hasSentInitialMessage = useRef(false);
 
   const sendMessage = async () => {
     try {
@@ -35,6 +36,42 @@ const ChatBot = ({ onClose }) => {
       console.error('Error al enviar el mensaje:', error);
     }
   };
+
+  useEffect(() => {
+
+    if (!hasSentInitialMessage.current) {
+      const initialMessage = 'Hola';
+
+      const sendInitialMessage = async () => {
+        try {
+          const response = await fetch('http://localhost:5005/webhooks/rest/webhook', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              sender: 'user',
+              message: initialMessage,
+            }),
+          });
+          const data = await response.json();
+
+          // Agregar la respuesta del bot al estado (después de enviar "Hola")
+          data.forEach(item => {
+            setAllMessages((prevMessages) => ({
+              ...prevMessages,
+              [`bot-${Date.now()}-${Math.random()}`]: item.text
+            }));
+          });
+        } catch (error) {
+          console.error('Error al enviar mensaje inicial:', error);
+        }
+      };
+
+      sendInitialMessage();
+      hasSentInitialMessage.current = true;
+    }
+  }, []);
 
   useEffect(() => {
     console.log("Mensajes actualizados:", allMessages);
