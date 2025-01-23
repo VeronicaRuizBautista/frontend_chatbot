@@ -10,7 +10,10 @@ export default {
         "light-blue": "#00bad2",
         "medium-blue": "#008da8",
         "dark-blue": "#00788b",
-      }
+      },
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+      },
     },
   },
   plugins: [],

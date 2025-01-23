@@ -1,10 +1,21 @@
-import React, { useState, useEffect, useRef  } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {MessageBox} from './messageBox.jsx';
+import { Loading } from './loading.jsx';
 
 const ChatBot = ({ onClose }) => {
   const [userMessage, setUserMessage] = useState('');
-  const [allMessages, setAllMessages] = useState({})
+  const [allMessages, setAllMessages] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const hasSentInitialMessage = useRef(false);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
+  }
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [allMessages, isLoading]);
 
   const sendMessage = async () => {
     try {
@@ -13,6 +24,7 @@ const ChatBot = ({ onClose }) => {
         [`user-${Date.now()}-${Math.random()}`]: userMessage
       }))
       setUserMessage('')
+      setIsLoading(true)
       const response = await fetch('http://localhost:5005/webhooks/rest/webhook', {
         method: 'POST',
         headers: {
@@ -32,6 +44,7 @@ const ChatBot = ({ onClose }) => {
           [`bot-${Date.now()}-${Math.random()}`]: item.text
         }))
       });
+      setIsLoading(false)
     } catch (error) {
       console.error('Error al enviar el mensaje:', error);
     }
@@ -78,7 +91,7 @@ const ChatBot = ({ onClose }) => {
   }, [allMessages]);
   
   return (
-    <div className='bg-gray-100 max-w-[100%] h-[500px] flex flex-col'>
+    <div className='font-poppins bg-gray-100 max-w-[100%] h-[500px] flex flex-col'>
       <div className='h-[20%] w-[100%] bg-white flex items-center px-5'>
         <img src="../../public/img/robot.jpg" alt="" className='h-[50px] w-[50px] bg-black rounded-full'/>
         <div>
@@ -89,8 +102,13 @@ const ChatBot = ({ onClose }) => {
       </div>
       <div className='h-[68%] overflow-hidden overflow-y-scroll py-7 px-5 flex flex-col gap-5'>
         {Object.entries(allMessages).map(([key, value]) => {
-          return (<MessageBox sender={key.includes("user") ? "user" : "bot"} message={value} />)
+          return (<MessageBox key={key} sender={key.includes("user") ? "user" : "bot"} message={value} />)  
         })}
+        {isLoading ? 
+        <div className="flex justify-center items-center w-[50px] h-[50px]">
+          <Loading />
+        </div> : ""}
+        <div ref={messagesEndRef}/>
       </div>
       <div className='h-[12%] w-[100%] bg-white flex justify-between items-center px-5'>
         <input
