@@ -14,6 +14,16 @@ export default {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
       },
+      animation: {
+        'custom-bounce': 'customBounce 1s ease-in-out forwards',
+      },
+      keyframes: {
+        customBounce: {
+          '0%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(-30px)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+      },
     },
   },
   plugins: [],

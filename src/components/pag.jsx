@@ -25,7 +25,7 @@ const Pag = () => {
                 </button>
             )}
             {isVisible && (
-                <div className="fixed bottom-10 right-5 w-[400px] bg-white shadow-[0_0px_12px_rgba(0,0,0,0.1)] p-4 rounded-lg z-10">
+                <div className="fixed bottom-10 right-5 w-[400px] bg-white shadow-[0_0px_12px_rgba(0,0,0,0.1)] p-4 rounded-lg z-10 animate-custom-bounce">
                     <Chatbot onClose={toggleChatbot} />
                 </div>
             )}
