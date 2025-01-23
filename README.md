@@ -1,8 +1,32 @@
-# React + Vite
+# **Frontend Demo Chatbot 🤖**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### **⚙️ Pre-requisitos**
 
-Currently, two official plugins are available:
+Antes de comenzar, asegúrate de tener instalados los siguientes programas en tu máquina:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Node.js**
+- **npm** (gestor de paquetes de Node.js)
+
+### **🚀 Instrucciones para ejecutar la página de demostración del chatbot en Rasa**
+
+Sigue estos pasos para poner en marcha el frontend y conectar con el chatbot que está implementado en Rasa:
+
+1. **Carga el chabot y sus acciones**:  
+
+El chatbot que se encuentra en el repositorio **PruebaRasa** debe estar corriendo (para mas detalles sigue las instrucciones del README.md qe se encuentra en ese repositorio).
+
+2. **Descargar dependencias**:
+Para descargar las dependencias necesarias ejucta el siguiente comando.
+    ```bash
+        npm i
+    ```
+
+3. **Ejecutar el comando para correr lá página web**:
+Para caragar la página puedes ejecutar el siguiente comando.
+    ```bash
+        npm run dev
+    ```
+
+4. **Abrir la página**: 
+Para abrir la página web ingrese a:
+http://localhost:5173/
