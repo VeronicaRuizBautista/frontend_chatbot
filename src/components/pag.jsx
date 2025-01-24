@@ -10,13 +10,7 @@ const Pag = () => {
     };
 
     return (
-        <div className="">
-            <div className="flex flex-col items-center justify-center">
-            <h1 className="titulo text-medium-orange pt-8">Demostración chatbot</h1>
-            <div className="boxImg w-3/6 mx-aut">
-                <img className="img object-contain w-full h-full" src='../../public/img/robot.jpg' alt="robot"/>
-            </div>
-            </div>
+        <>
             {isVisibleBtn && (
                 <button 
                 onClick={toggleChatbot}
@@ -30,7 +24,7 @@ const Pag = () => {
                 </div>
             )}
             <script type="module" src="/src/main.jsx"></script>
-        </div>
+        </>
     )
 }
 export default Pag
