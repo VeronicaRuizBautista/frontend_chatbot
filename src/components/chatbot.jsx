@@ -93,7 +93,7 @@ const ChatBot = ({ onClose }) => {
   return (
     <div className='font-poppins bg-gray-100 max-w-[100%] h-[500px] flex flex-col'>
       <div className='h-[20%] w-[100%] bg-white flex items-center px-5'>
-        <img src="../../public/img/robot.jpg" alt="" className='h-[50px] w-[50px] bg-black rounded-full'/>
+        <img src="https://github.com/VeronicaRuizBautista/frontend_chatbot/blob/main/public/img/robot.jpg" alt="" className='h-[50px] w-[50px] bg-black rounded-full'/>
         <div>
           <h3 className='text-left text-xl font-medium ml-6'>Solvo Ai Chat</h3>
           <h4 className='text-left ml-6'>Support Agent</h4>
